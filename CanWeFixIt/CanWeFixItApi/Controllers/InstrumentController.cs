@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CanWeFixItApi.Controllers
 {
+    using System.Linq;
+
+    using CanWeFixItService;
+
     [ApiController]
     [Route("v1/instruments")]
     public class InstrumentController : ControllerBase
@@ -18,7 +22,7 @@ namespace CanWeFixItApi.Controllers
         // GET
         public async Task<ActionResult<IEnumerable<Instrument>>> Get()
         {   
-            return Ok(_database.Instruments().Result);
+            return Ok(_database.Instruments().Result.Where(x => x.Active));
         }
     }
 }

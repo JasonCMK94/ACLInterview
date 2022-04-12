@@ -23,14 +23,14 @@ namespace CanWeFixItService
             _connection.Open();
         }
         
-        public IEnumerable<Instrument> Instruments()
+        public Task<IEnumerable<Instrument>> Instruments()
         {
-            return _connection.QueryAsync<Instrument>("SQL GOES HERE");
+            return _connection.QueryAsync<Instrument>("SELECT Id, Sedol, Name, Active FROM Instrument");
         }
 
         public async Task<IEnumerable<MarketData>> MarketData()
         {
-            return await _connection.QueryAsync<MarketData>("SELECT Id, DataValue FROM MarketData WHERE Active = 0");
+            return await _connection.QueryAsync<MarketData>("SELECT Id, DataValue, Sedol, Active FROM MarketData");
         }
 
         /// <summary>

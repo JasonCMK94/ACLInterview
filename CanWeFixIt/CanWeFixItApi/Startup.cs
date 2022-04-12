@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 
 namespace CanWeFixItApi
 {
+    using CanWeFixItService;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)

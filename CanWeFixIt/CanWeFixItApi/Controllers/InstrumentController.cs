@@ -8,21 +8,24 @@ namespace CanWeFixItApi.Controllers
 
     using CanWeFixItService;
 
+    using Microsoft.EntityFrameworkCore;
+
     [ApiController]
     [Route("v1/instruments")]
     public class InstrumentController : ControllerBase
     {
-        private readonly IDatabaseService _database;
+        private readonly CanWeFixItContext _context;
         
-        public InstrumentController(IDatabaseService database)
+        public InstrumentController(CanWeFixItContext context)
         {
-            _database = database;
+            _context = context;
         }
         
         // GET
         public async Task<ActionResult<IEnumerable<Instrument>>> Get()
-        {   
-            return Ok(_database.Instruments().Result.Where(x => x.Active));
+        {
+            var instruments = await _context.Instrument.Where(x => x.Active).ToListAsync();
+            return Ok(instruments);
         }
     }
 }

@@ -8,29 +8,30 @@ namespace CanWeFixItApi.Controllers
 {
     using CanWeFixItService;
 
+    using Microsoft.EntityFrameworkCore;
+
     [ApiController]
     [Route("v1/valuations")]
     public class ValuationController : ControllerBase
     {
-        private readonly IDatabaseService _database;
-
         private const string _marketValuationName = "DataValueTotal";
 
-        public ValuationController(IDatabaseService database)
+        private readonly CanWeFixItContext _context;
+
+        public ValuationController(CanWeFixItContext context)
         {
-            _database = database;
+            _context = context;
         }
 
         // GET
         public async Task<ActionResult<IEnumerable<MarketValuation>>> Get()
         {
-            MarketValuation valuation = new MarketValuation
-                                            {
-                                                Name = _marketValuationName,
-                                                Total = _database.MarketData().Result
-                                                    .Where(x => x.Active)
-                                                    .Sum(x => x.DataValue.Value)
-                                            };
+            var marketData = await _context.MarketData.Where(x => x.Active).ToListAsync();
+            var valuation = new MarketValuation
+                                {
+                                    Name = _marketValuationName,
+                                    Total = marketData.Sum(x => x.DataValue ?? 0)
+                                };
 
             return new List<MarketValuation> { valuation };
         }

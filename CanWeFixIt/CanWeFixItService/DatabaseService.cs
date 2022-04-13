@@ -12,25 +12,15 @@ namespace CanWeFixItService
         
         // Using a name and a shared cache allows multiple connections to access the same
         // in-memory database
-        const string connectionString = "Data Source=DatabaseService;Mode=Memory;Cache=Shared";
+        public const string ConnectionString = "Data Source=DatabaseService;Mode=Memory;Cache=Shared";
         private SqliteConnection _connection;
 
         public DatabaseService()
         {
             // The in-memory database only persists while a connection is open to it. To manage
             // its lifetime, keep one open connection around for as long as you need it.
-            _connection = new SqliteConnection(connectionString);
+            _connection = new SqliteConnection(ConnectionString);
             _connection.Open();
-        }
-        
-        public Task<IEnumerable<Instrument>> Instruments()
-        {
-            return _connection.QueryAsync<Instrument>("SELECT Id, Sedol, Name, Active FROM Instrument");
-        }
-
-        public async Task<IEnumerable<MarketData>> MarketData()
-        {
-            return await _connection.QueryAsync<MarketData>("SELECT Id, DataValue, Sedol, Active FROM MarketData");
         }
 
         /// <summary>
